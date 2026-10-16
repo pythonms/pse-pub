@@ -1,0 +1,20 @@
+[project]
+name = "fastapi-demo"
+dynamic = ["version"]
+description = "Przykładowy projekt FastAPI z pyproject.toml"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.28.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "__version__.py"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["main.py", "__version__.py"]
