@@ -39,5 +39,5 @@ Po squash-merge workflow taguje `v1.5.0` tutaj, commituje drzewo plików na `mai
 
 Sekret `PUBLISH_TOKEN` to PAT z uprawnieniem contents:write do `pythonms/pse-pub`. GitHub Actions musi móc wypchnąć commit z podbiciem wersji na `main`.
 ==
-Pewne zmiany 3.0
+Pewne zmiany 5.0
 
