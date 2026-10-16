@@ -4,7 +4,7 @@ from __version__ import __version__
 
 app = FastAPI(
     title="Przykładowy Projekt FastAPI",
-    description="Prosta testowa aplikacja z konfiguracją pyproject.toml",
+    description="Prosta testowa aplikacja my friend z konfiguracją pyproject.toml",
     version=__version__,
 )
 
