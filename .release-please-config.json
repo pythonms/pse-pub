@@ -1,9 +1,0 @@
-{
-  "packages": {
-    ".": {
-      "release-type": "python",
-      "package-name": "fastapi-demo",
-      "extra-files": ["__version__.py"]
-    }
-  }
-}

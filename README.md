@@ -1,43 +1,38 @@
 # pse-priv
 
-Prywatne repozytorium rozwojowe. Publiczne wydanie ląduje w [pse-pub](https://github.com/pythonms/pse-pub) jako snapshot plików, bez historii z tego repozytorium.
+Prywatne repozytorium rozwojowe. Publiczne lustro ląduje w [pse-pub](https://github.com/pythonms/pse-pub) przy każdym squash-merge na `main` (konfiguracja **A**: auto-bump + sync).
+
+Szczegóły modelu: [docs/workflows/config-A-mirror-auto.md](docs/workflows/config-A-mirror-auto.md).  
+Porównanie A vs B (plan Cursor + Mermaid): [docs/plans/porownanie-1A2A-vs-1B2B.plan.md](docs/plans/porownanie-1A2A-vs-1B2B.plan.md).
 
 ## Uruchomienie przez Docker Compose
-
-Uruchom aplikację poleceniem:
 
 ```sh
 docker compose up --build
 ```
 
-API będzie dostępne pod adresem http://localhost:8000, a dokumentacja Swagger UI pod http://localhost:8000/docs.
+API: http://localhost:8000 · Swagger: http://localhost:8000/docs
 
-## Wersja na `dev`
+## Codzienny rytm
 
-Workflow publikuje obraz Dockera i artefakt wheel przy zmianach na gałęziach `main` i `dev`. Na `main` uruchamia również Release Please oraz synchronizację do publicznego repozytorium.
+1. Feature branch → PR → `dev` (CI + obraz GHCR `:dev`).
+2. Gdy gotowe: PR `dev` → `main`, **squash merge**.
+3. Tytuł / wiadomość squash (conventional commits):
+   - `fix:` / inne → **patch**
+   - `feat:` → **minor**
+   - `feat!:` albo `BREAKING CHANGE:` → **major**
+4. Workflow na `main`:
+   - podbija `__version__.py` do `X.Y.Z`
+   - taguje `vX.Y.Z`
+   - buduje wheel + obraz (`latest`, `vX.Y.Z`)
+   - synchronizuje drzewo plików do `pse-pub` (bez `.github/` i docs workflow)
 
-Każdy push na `dev` dostaje nową wersję i otwiera albo aktualizuje pull request z `dev` do `main`. Tytuł to `dev: X.Y.Z.devN`. Domyślnie podbijany jest patch, `feat:` podbija minor, a `!` lub `BREAKING CHANGE:` podbija major. Workflow zapisuje wersję wheel jako `X.Y.Z.devN` w `__version__.py`, aktualizuje manifest Release Please, publikuje wheel jako artefakt workflow (z 14-dniową retencją) i tworzy tag Git `vX.Y.Z`. Nie publikuje wheel’a do PyPI. Numer użyty na `dev` jest zarezerwowany, więc stabilne wydanie powinno użyć następnego numeru. Tagowane jest automatyczne zatwierdzenie zmiany wersji.
+W ustawieniach repo zostaw tylko **squash merge** i kasowanie gałęzi po merge.
 
-Aby włączyć synchronizację publiczną, ustaw zmienną repozytorium `PUBLIC_REPOSITORY` w formacie `właściciel/repozytorium` oraz sekret `PUBLIC_REPO_TOKEN` (https://github.com/settings/personal-access-tokens) Jeszcze dodajemy R/W dla PR do tokena, z uprawnieniami `contents: write` i `pull requests: write` w repozytorium docelowym. Jeśli zmienna nie jest ustawiona, krok synchronizacji jest pomijany.
+## Sekret
 
-## Wydanie na `main`
+`PUBLISH_TOKEN` — PAT z `contents:write` do `pythonms/pse-pub`. Bez niego job release/sync kończy się błędem.
 
-`VERSION` na `main` ma postać `X.Y.Z-dev`. Zwykły PR zostawia ten numer bez zmian.
+## Wersja
 
-Tytuł PR opisuje zmianę. Squash-merge do `main`. Tytuł nie może być samym numerem wersji.
-
-W ustawieniach repozytorium zostaw tylko squash merge i kasowanie gałęzi po merge.
-
-PR wydania spełnia cztery warunki:
-
-- tytuł `release: 1.5.0`
-- `VERSION` równy `1.5.0`
-- w `CHANGELOG.md` nagłówek `## [1.5.0]`
-- w opisie linia `Next-dev: 1.5.1-dev` z wyższym numerem
-
-Po squash-merge workflow taguje `v1.5.0` tutaj, commituje drzewo plików na `main` w `pse-pub` (rodzicem jest poprzednie wydanie publiczne, nie commit z tego repo) i ustawia `VERSION` na `main` na wartość z `Next-dev`.
-
-Sekret `PUBLISH_TOKEN` to PAT z uprawnieniem contents:write do `pythonms/pse-pub`. GitHub Actions musi móc wypchnąć commit z podbiciem wersji na `main`.
-==
-Pewne zmiany 5.0
-
+Jedyny plik wersji: `__version__.py` (format `X.Y.Z`). Na `dev` nie tworzymy tagów `v*`.
