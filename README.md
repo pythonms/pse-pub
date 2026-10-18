@@ -26,7 +26,10 @@ API: http://localhost:8000 · Swagger: http://localhost:8000/docs
    - dopisuje wpis do `CHANGELOG.md` (Features / Bug Fixes / Breaking…)
    - taguje `vX.Y.Z`
    - buduje wheel + obraz (`latest`, `vX.Y.Z`)
-   - synchronizuje drzewo plików do `pse-pub` (w tym changelog; bez `.github/` i docs workflow)
+   - synchronizuje drzewo do `pse-pub` (kod + changelog + `wheels/*.whl`)
+   - dokłada ten sam `.whl` do GitHub Release na `pse-pub`
+
+Na `dev` workflow buduje wheel i wrzuca go jako artifact Actions (`package-wheel-dev`); na pub wheel trafia dopiero po wejściu na `main`.
 
 W ustawieniach repo zostaw tylko **squash merge** i kasowanie gałęzi po merge.
 

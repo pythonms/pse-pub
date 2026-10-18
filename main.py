@@ -11,9 +11,15 @@ app = FastAPI(
 
 @app.get("/")
 def read_root():
-  """Główny endpoint zwracający powitanie."""
-  return {
-      "message": "Witaj my friend w przykładowym projekcie FastAPI!",
-      "status": "sukces",
-      "code": 200,
-  }
+    """Główny endpoint zwracający powitanie."""
+    return {
+        "message": "Witaj my friend w przykładowym projekcie FastAPI!",
+        "status": "sukces",
+        "code": 200,
+    }
+
+
+@app.get("/health")
+def health():
+    """Liveness probe for Compose and CI."""
+    return {"status": "ok", "version": __version__}

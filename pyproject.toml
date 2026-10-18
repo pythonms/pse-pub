@@ -1,7 +1,7 @@
 [project]
 name = "fastapi-demo"
 dynamic = ["version"]
-description = "Przykładowy projekt FastAPI z pyproject.toml"
+description = "Przykładowy projekt FastAPI (dev wheel builds enabled)"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
