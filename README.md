@@ -23,9 +23,10 @@ API: http://localhost:8000 · Swagger: http://localhost:8000/docs
    - `feat!:` albo `BREAKING CHANGE:` → **major**
 4. Workflow na `main`:
    - podbija `__version__.py` do `X.Y.Z`
+   - dopisuje wpis do `CHANGELOG.md` (Features / Bug Fixes / Breaking…)
    - taguje `vX.Y.Z`
    - buduje wheel + obraz (`latest`, `vX.Y.Z`)
-   - synchronizuje drzewo plików do `pse-pub` (bez `.github/` i docs workflow)
+   - synchronizuje drzewo plików do `pse-pub` (w tym changelog; bez `.github/` i docs workflow)
 
 W ustawieniach repo zostaw tylko **squash merge** i kasowanie gałęzi po merge.
 
