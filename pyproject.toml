@@ -18,3 +18,42 @@ path = "__version__.py"
 
 [tool.hatch.build.targets.wheel]
 only-include = ["main.py", "__version__.py"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.0",
+    "coverage>=7.6.0",
+    "httpx>=0.27.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = [".", "scripts", "tests", ".github/scripts"]
+exclude = [
+    ".git",
+    ".venv",
+    "dist",
+    "build",
+    "docs/plans",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.coverage.run]
+branch = true
+source = ["main", "__version__", "scripts", ".github/scripts"]
+omit = [
+    "tests/*",
+    "docs/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 80
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+]

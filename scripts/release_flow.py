@@ -128,10 +128,9 @@ def validate_pr(
         errors.append(err)
         return errors
 
-    if base_version is not None:
-        if err := version_error(base_version):
-            errors.append(f"base {err}")
-            return errors
+    if base_version is not None and (err := version_error(base_version)):
+        errors.append(f"base {err}")
+        return errors
 
     release = parse_release_title(title)
     if title.strip().startswith("release:") and release is None:

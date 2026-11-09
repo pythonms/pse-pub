@@ -18,6 +18,12 @@
 
 
 
+
+## [0.1.35] - 2026-11-09
+
+### CI
+- add Ruff lint and coverage gate on priv
+
 ## [0.1.34] - 2026-11-09
 
 ### Changes
