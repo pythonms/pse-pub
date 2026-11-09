@@ -17,6 +17,12 @@
 
 
 
+
+## [0.1.34] - 2026-11-09
+
+### Changes
+- Merge pull request #7 from pythonms/clean-up
+
 ## [0.1.33] - 2026-11-09
 
 ### Changes
