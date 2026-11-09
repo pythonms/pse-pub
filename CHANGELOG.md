@@ -16,6 +16,12 @@
 
 
 
+
+## [0.1.33] - 2026-11-09
+
+### Changes
+- drop gha-workflows inheritance, restore local workflows
+
 ## [0.1.32] - 2026-11-09
 
 ### Bug Fixes
