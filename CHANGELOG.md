@@ -12,6 +12,12 @@
 
 
 
+
+## [0.1.29] - 2026-11-09
+
+### Bug Fixes
+- harden main-release with CI gate and Trivy before pub sync
+
 ## [0.1.28] - 2026-11-09
 
 ### Bug Fixes
