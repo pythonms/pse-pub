@@ -15,6 +15,12 @@
 
 
 
+
+## [0.1.32] - 2026-11-09
+
+### Bug Fixes
+- restore Dev Build / Main Release wrappers on local reusable workflows
+
 ## [0.1.31] - 2026-11-09
 
 ### Bug Fixes
