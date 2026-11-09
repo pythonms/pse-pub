@@ -107,13 +107,14 @@ class BumpMainVersionTest(unittest.TestCase):
             )
             output = root / "out.txt"
 
-            with mock.patch.object(bump, "VERSION_FILE", version_file), mock.patch.object(
-                bump, "CHANGELOG_FILE", changelog_file
-            ), mock.patch.object(bump, "existing_tags", return_value=set()), mock.patch.dict(
+            with mock.patch.object(bump, "existing_tags", return_value=set()), mock.patch.dict(
                 os.environ,
                 {
                     "COMMIT_MESSAGE": "feat: hello",
                     "GITHUB_OUTPUT": str(output),
+                    "VERSION_STRATEGY": "python",
+                    "VERSION_FILE": str(version_file),
+                    "CHANGELOG_FILE": str(changelog_file),
                 },
             ):
                 bump.main()
