@@ -7,6 +7,12 @@
 
 
 
+
+## [0.1.24] - 2026-11-09
+
+### CI
+- split Build & Release back into Dev Build and Main Release
+
 ## [0.1.23] - 2026-11-09
 
 ### Bug Fixes
