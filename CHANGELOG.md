@@ -10,6 +10,12 @@
 
 
 
+
+## [0.1.27] - 2026-11-09
+
+### Bug Fixes
+- run container as non-root user for Trivy DS-0002
+
 ## [0.1.26] - 2026-11-09
 
 ### Bug Fixes
