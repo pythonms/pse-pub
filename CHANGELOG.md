@@ -6,6 +6,12 @@
 
 
 
+
+## [0.1.23] - 2026-11-09
+
+### Bug Fixes
+- repair YAML in build-and-release COMMIT_MESSAGE env
+
 ## [0.1.22] - 2026-11-09
 
 ### CI
