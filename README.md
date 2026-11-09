@@ -13,6 +13,13 @@ docker compose up --build
 
 API: http://localhost:8000 · Swagger: http://localhost:8000/docs
 
+
+## Smoke endpoints
+
+- `GET /` — powitanie
+- `GET /health` — liveness
+- `GET /version` — wersja pakietu
+
 ## Codzienny rytm
 
 1. Feature branch → PR → `dev` (CI + obraz GHCR `:dev`).
