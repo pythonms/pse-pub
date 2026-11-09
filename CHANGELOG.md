@@ -11,6 +11,12 @@
 
 
 
+
+## [0.1.28] - 2026-11-09
+
+### Bug Fixes
+- apt-get upgrade base image packages for Trivy zlib CVEs
+
 ## [0.1.27] - 2026-11-09
 
 ### Bug Fixes
