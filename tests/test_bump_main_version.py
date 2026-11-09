@@ -85,6 +85,17 @@ class BumpMainVersionTest(unittest.TestCase):
         self.assertIn("### Breaking Changes", updated)
         self.assertIn("- drop legacy auth", updated)
 
+    def test_changelog_sanitizes_markdown_links(self) -> None:
+        updated = bump.update_changelog(
+            "# Changelog\n\n## [Unreleased]\n",
+            "0.3.0",
+            "fix: see [docs](https://evil.example/phish)",
+            today=date(2026, 10, 19),
+        )
+        self.assertIn("- see docs", updated)
+        self.assertNotIn("evil.example", updated)
+        self.assertNotIn("](", updated)
+
     def test_main_writes_version_changelog_and_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

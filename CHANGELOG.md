@@ -13,6 +13,12 @@
 
 
 
+
+## [0.1.30] - 2026-11-09
+
+### Bug Fixes
+- close remaining CI security findings except action SHA pins
+
 ## [0.1.29] - 2026-11-09
 
 ### Bug Fixes
