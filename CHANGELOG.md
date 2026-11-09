@@ -5,6 +5,12 @@
 
 
 
+
+## [0.1.22] - 2026-11-09
+
+### CI
+- merge Dev Build and Main Release into one Actions workflow
+
 ## [0.1.21] - 2026-11-09
 
 ### Chores
