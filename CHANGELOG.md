@@ -19,6 +19,12 @@
 
 
 
+
+## [0.1.36] - 2026-11-10
+
+### Changes
+- Dodaj issue forms: bug i nowa funkcjonalność (#10)
+
 ## [0.1.35] - 2026-11-09
 
 ### CI
