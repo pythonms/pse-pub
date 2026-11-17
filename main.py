@@ -13,7 +13,7 @@ app = FastAPI(
 def read_root():
     """Główny endpoint zwracający powitanie."""
     return {
-        "message": "Witaj w przykładowym projekcie FastAPI!",
+        "message": "Witaj w przykładowym projekcie FastAPI!, hello world",
         "status": "sukces",
         "code": 200,
     }
