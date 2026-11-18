@@ -26,6 +26,12 @@
 
 
 
+
+## [0.3.2] - 2026-11-18
+
+### Features
+- bump version on every dev push, release max on main (#18)
+
 ## [0.3.1] - 2026-11-18
 
 ### Documentation

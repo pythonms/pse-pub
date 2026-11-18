@@ -56,9 +56,25 @@ class BumpMainVersionTest(unittest.TestCase):
         )
         self.assertEqual((version, tag), ("0.1.18", "v0.1.18"))
 
-    def test_is_release_commit(self) -> None:
+    def test_is_release_and_bump_commit(self) -> None:
         self.assertTrue(bump.is_release_commit("chore(release): 1.2.4\n"))
+        self.assertTrue(bump.is_bump_commit("chore(bump): 1.2.4\n"))
         self.assertFalse(bump.is_release_commit("feat: something\n"))
+        self.assertFalse(bump.is_bump_commit("feat: something\n"))
+
+    def test_release_version_from_file_keeps_number(self) -> None:
+        version, tag = bump.release_version_from_file(
+            '__version__ = "0.2.5"\n',
+            taken_tags=set(),
+        )
+        self.assertEqual((version, tag), ("0.2.5", "v0.2.5"))
+
+    def test_release_version_from_file_fails_if_tag_exists(self) -> None:
+        with self.assertRaises(SystemExit):
+            bump.release_version_from_file(
+                '__version__ = "0.2.5"\n',
+                taken_tags={"v0.2.5"},
+            )
 
     def test_changelog_feat_under_unreleased(self) -> None:
         current = "# Changelog\n\n## [Unreleased]\n\n## [0.1.0] - 2026-01-01\n- old\n"
@@ -72,7 +88,6 @@ class BumpMainVersionTest(unittest.TestCase):
         self.assertIn("## [0.2.0] - 2026-10-19", updated)
         self.assertIn("### Features", updated)
         self.assertIn("- **api:** add health", updated)
-        # New entry before previous release
         self.assertLess(updated.index("## [0.2.0]"), updated.index("## [0.1.0]"))
 
     def test_changelog_breaking_section(self) -> None:
@@ -96,12 +111,12 @@ class BumpMainVersionTest(unittest.TestCase):
         self.assertNotIn("evil.example", updated)
         self.assertNotIn("](", updated)
 
-    def test_main_writes_version_changelog_and_output(self) -> None:
+    def test_main_mode_keeps_file_version_and_writes_changelog(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             version_file = root / "__version__.py"
             changelog_file = root / "CHANGELOG.md"
-            version_file.write_text('__version__ = "0.1.0"\n', encoding="utf-8")
+            version_file.write_text('__version__ = "0.2.5"\n', encoding="utf-8")
             changelog_file.write_text(
                 "# Changelog\n\n## [Unreleased]\n", encoding="utf-8"
             )
@@ -112,6 +127,42 @@ class BumpMainVersionTest(unittest.TestCase):
             ), mock.patch.object(bump, "existing_tags", return_value=set()), mock.patch.dict(
                 os.environ,
                 {
+                    "MODE": "main",
+                    "COMMIT_MESSAGE": "feat: hello",
+                    "GITHUB_OUTPUT": str(output),
+                },
+            ):
+                bump.main()
+
+            self.assertEqual(
+                version_file.read_text(encoding="utf-8"), '__version__ = "0.2.5"\n'
+            )
+            changelog = changelog_file.read_text(encoding="utf-8")
+            self.assertIn("## [0.2.5]", changelog)
+            self.assertIn("### Features", changelog)
+            self.assertIn("- hello", changelog)
+            text = output.read_text(encoding="utf-8")
+            self.assertIn("version=0.2.5\n", text)
+            self.assertIn("tag=v0.2.5\n", text)
+
+    def test_dev_mode_bumps_file_without_changelog(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            version_file = root / "__version__.py"
+            changelog_file = root / "CHANGELOG.md"
+            version_file.write_text('__version__ = "0.1.0"\n', encoding="utf-8")
+            changelog_file.write_text(
+                "# Changelog\n\n## [Unreleased]\n", encoding="utf-8"
+            )
+            output = root / "out.txt"
+            before = changelog_file.read_text(encoding="utf-8")
+
+            with mock.patch.object(bump, "VERSION_FILE", version_file), mock.patch.object(
+                bump, "CHANGELOG_FILE", changelog_file
+            ), mock.patch.dict(
+                os.environ,
+                {
+                    "MODE": "dev",
                     "COMMIT_MESSAGE": "feat: hello",
                     "GITHUB_OUTPUT": str(output),
                 },
@@ -121,13 +172,9 @@ class BumpMainVersionTest(unittest.TestCase):
             self.assertEqual(
                 version_file.read_text(encoding="utf-8"), '__version__ = "0.2.0"\n'
             )
-            changelog = changelog_file.read_text(encoding="utf-8")
-            self.assertIn("## [0.2.0]", changelog)
-            self.assertIn("### Features", changelog)
-            self.assertIn("- hello", changelog)
-            text = output.read_text(encoding="utf-8")
-            self.assertIn("version=0.2.0\n", text)
-            self.assertIn("tag=v0.2.0\n", text)
+            self.assertEqual(changelog_file.read_text(encoding="utf-8"), before)
+            self.assertIn("version=0.2.0\n", output.read_text(encoding="utf-8"))
+            self.assertNotIn("tag=", output.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

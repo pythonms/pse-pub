@@ -23,15 +23,16 @@ API: http://localhost:8000 · Swagger: http://localhost:8000/docs
 ## Codzienny rytm
 
 1. Feature branch → PR → `dev` (CI + obraz GHCR `:dev`).
-2. Push na `dev` otwiera/aktualizuje automatyczny PR `dev` → `main` (lista commitów w body).
-3. Przed merge **edytuj tytuł PR** — to wiadomość squash (conventional commits):
+2. Każdy push na `dev` (oprócz `chore(bump):`) **podbija** `__version__.py` z conventional commits:
    - `fix:` / inne → **patch**
    - `feat:` → **minor**
    - `feat!:` albo `BREAKING CHANGE:` → **major**
-4. **Squash merge** PR na `main`.
-5. Workflow na `main`:
-   - podbija `__version__.py` do `X.Y.Z`
-   - dopisuje wpis do `CHANGELOG.md` (Features / Bug Fixes / Breaking…)
+3. Push na `dev` otwiera/aktualizuje automatyczny PR `dev` → `main` (lista commitów w body).
+4. Przed merge **edytuj tytuł PR** — opis squasha do `CHANGELOG` (nie zmienia numeru wersji).
+5. **Squash merge** PR na `main`.
+6. Workflow na `main`:
+   - bierze wersję już z `__version__.py` (najwyższa z `dev`)
+   - dopisuje wpis do `CHANGELOG.md` z tytułu PR
    - taguje `vX.Y.Z`
    - buduje wheel + obraz (`latest`, `vX.Y.Z`)
    - synchronizuje drzewo do `pse-pub` (kod + changelog + `wheels/*.whl`)
@@ -42,7 +43,7 @@ Na `dev` workflow buduje wheel i wrzuca go jako artifact Actions (`package-wheel
 W ustawieniach repo:
 
 - tylko **Allow squash merging** (+ kasowanie gałęzi po merge)
-- Squash commit message = **Pull request title** (tytuł PR = bump + changelog + pub)
+- Squash commit message = **Pull request title** (tytuł PR → changelog / opis release)
 
 ## Sekret
 
@@ -50,4 +51,4 @@ W ustawieniach repo:
 
 ## Wersja
 
-Jedyny plik wersji: `__version__.py` (format `X.Y.Z`). Na `dev` nie tworzymy tagów `v*`.
+Jedyny plik wersji: `__version__.py` (format `X.Y.Z`). Numer rośnie na **`dev`** przy każdym pushu; na **`main`** release = ta sama (najwyższa) wersja z merga. Tagi `v*` tylko na `main`.
