@@ -25,6 +25,12 @@
 
 
 
+
+## [0.3.1] - 2026-11-18
+
+### Documentation
+- clarify health endpoint docstring (#17)
+
 ## [0.3.0] - 2026-11-18
 
 ### Features
