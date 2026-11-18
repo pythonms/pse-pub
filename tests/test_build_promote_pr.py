@@ -37,6 +37,20 @@ class BuildPromotePrTest(unittest.TestCase):
         lines = ["- abc1234 feat: add endpoint", "- def5678 fix: typo"]
         self.assertEqual(promote.default_title(lines), "feat: add endpoint")
 
+    def test_default_title_skips_chore_bump_tip(self) -> None:
+        lines = [
+            "- abc1234 chore(bump): 0.3.2",
+            "- def5678 feat: auto-open promote PR",
+            "- ghi9012 fix: tidy docstring",
+        ]
+        self.assertEqual(
+            promote.default_title(lines), "feat: auto-open promote PR"
+        )
+
+    def test_default_title_all_bumps_falls_back(self) -> None:
+        lines = ["- abc1234 chore(bump): 0.3.2", "- def5678 chore(bump): 0.3.1"]
+        self.assertEqual(promote.default_title(lines), promote.DEFAULT_TITLE)
+
     def test_default_title_fallback_when_not_conventional(self) -> None:
         lines = ["- abc1234 Update stuff"]
         self.assertEqual(promote.default_title(lines), promote.DEFAULT_TITLE)

@@ -27,6 +27,12 @@
 
 
 
+
+## [0.3.6] - 2026-11-18
+
+### Bug Fixes
+- allow main release when squash title is chore(bump) (#20)
+
 ## [0.3.2] - 2026-11-18
 
 ### Features

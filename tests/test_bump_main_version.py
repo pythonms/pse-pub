@@ -111,6 +111,76 @@ class BumpMainVersionTest(unittest.TestCase):
         self.assertNotIn("evil.example", updated)
         self.assertNotIn("](", updated)
 
+    def test_changelog_source_recovers_from_bump_squash(self) -> None:
+        message = (
+            "chore(bump): 0.3.2 (#19)\n"
+            "\n"
+            "* chore: parameterize repo names\n"
+            "* feat: auto-open promote PR\n"
+            "* chore(bump): 0.3.3\n"
+        )
+        self.assertEqual(
+            bump.changelog_source_message(message),
+            "chore: parameterize repo names",
+        )
+        updated = bump.update_changelog(
+            "# Changelog\n\n## [Unreleased]\n",
+            "0.3.3",
+            message,
+            today=date(2026, 11, 18),
+        )
+        self.assertIn("### Chores", updated)
+        self.assertIn("- parameterize repo names", updated)
+        self.assertNotIn("0.3.2 (#19)", updated)
+
+    def test_main_mode_allows_chore_bump_squash_title(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            version_file = root / "__version__.py"
+            changelog_file = root / "CHANGELOG.md"
+            version_file.write_text('__version__ = "0.3.3"\n', encoding="utf-8")
+            changelog_file.write_text(
+                "# Changelog\n\n## [Unreleased]\n", encoding="utf-8"
+            )
+            output = root / "out.txt"
+            message = (
+                "chore(bump): 0.3.2 (#19)\n\n"
+                "* feat: auto-open promote PR\n"
+            )
+
+            with mock.patch.object(bump, "VERSION_FILE", version_file), mock.patch.object(
+                bump, "CHANGELOG_FILE", changelog_file
+            ), mock.patch.object(bump, "existing_tags", return_value=set()), mock.patch.dict(
+                os.environ,
+                {
+                    "MODE": "main",
+                    "COMMIT_MESSAGE": message,
+                    "GITHUB_OUTPUT": str(output),
+                },
+            ):
+                bump.main()
+
+            changelog = changelog_file.read_text(encoding="utf-8")
+            self.assertIn("## [0.3.3]", changelog)
+            self.assertIn("### Features", changelog)
+            self.assertIn("- auto-open promote PR", changelog)
+            text = output.read_text(encoding="utf-8")
+            self.assertIn("version=0.3.3\n", text)
+            self.assertIn("tag=v0.3.3\n", text)
+
+    def test_main_mode_still_refuses_chore_release(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            version_file = root / "__version__.py"
+            version_file.write_text('__version__ = "0.3.3"\n', encoding="utf-8")
+            with mock.patch.object(bump, "VERSION_FILE", version_file), mock.patch.dict(
+                os.environ,
+                {"MODE": "main", "COMMIT_MESSAGE": "chore(release): 0.3.3"},
+                clear=False,
+            ), self.assertRaises(SystemExit) as ctx:
+                bump.main()
+            self.assertIn("chore(release)", str(ctx.exception))
+
     def test_main_mode_keeps_file_version_and_writes_changelog(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
