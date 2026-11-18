@@ -25,10 +25,10 @@
 
 
 
-## [0.2.2] - 2026-11-18
+## [0.3.0] - 2026-11-18
 
-### Chores
-- drop config B and keep only mirror auto-bump (A) (#15)
+### Features
+- auto-open promote PR from dev to main (#16)
 
 ## [0.2.1] - 2026-11-17
 
