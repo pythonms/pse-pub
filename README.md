@@ -2,8 +2,7 @@
 
 Prywatne repozytorium rozwojowe. Publiczne lustro ląduje w [pse-pub](https://github.com/pythonms/pse-pub) przy każdym squash-merge na `main` (konfiguracja **A**: auto-bump + sync).
 
-Szczegóły modelu: [docs/workflows/config-A-mirror-auto.md](docs/workflows/config-A-mirror-auto.md).  
-Porównanie A vs B (Mermaid): [docs/plans/porownanie-1A2A-vs-1B2B.plan.md](docs/plans/porownanie-1A2A-vs-1B2B.plan.md).
+Szczegóły modelu: [docs/workflows/config-A-mirror-auto.md](docs/workflows/config-A-mirror-auto.md) · diagramy: [docs/plans/diagrams/](docs/plans/diagrams/).
 
 ## Uruchomienie przez Docker Compose
 
@@ -40,9 +39,12 @@ Na `dev` workflow buduje wheel i wrzuca go jako artifact Actions (`package-wheel
 
 W ustawieniach repo zostaw tylko **squash merge** i kasowanie gałęzi po merge.
 
-## Sekret
+## Publikacja do `pse-pub`
 
-`PUBLISH_TOKEN` — PAT z `contents:write` do `pythonms/pse-pub`. Bez niego job release/sync kończy się błędem.
+W environment Actions **`public-publish`**:
+
+- preferowane: `PUBLISH_APP_ID` + `PUBLISH_APP_PRIVATE_KEY` (GitHub App na `pythonms/pse-pub`)
+- fallback: `PUBLISH_TOKEN` (PAT z `contents:write`). Bez credentials job sync kończy się błędem.
 
 ## Wersja
 

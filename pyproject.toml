@@ -29,7 +29,7 @@ dev = [
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = [".", "scripts", "tests", ".github/scripts"]
+src = [".", "tests", ".github/scripts"]
 exclude = [
     ".git",
     ".venv",
@@ -43,7 +43,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.coverage.run]
 branch = true
-source = ["main", "__version__", "scripts", ".github/scripts"]
+source = ["main", "__version__", ".github/scripts"]
 omit = [
     "tests/*",
     "docs/*",
