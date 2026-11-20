@@ -28,6 +28,12 @@
 
 
 
+
+## [0.4.0] - 2026-11-20
+
+### Documentation
+- add gh CLI example for Dev Build .dev tag dispatch (#24)
+
 ## [0.3.6] - 2026-11-18
 
 ### Bug Fixes

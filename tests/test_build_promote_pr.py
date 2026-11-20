@@ -68,7 +68,7 @@ class BuildPromotePrTest(unittest.TestCase):
     def test_build_body_refreshes_only_marked_section(self) -> None:
         existing = (
             f"{promote.COMMITS_START}\n"
-            "## Commits on dev (since main)\n\n"
+            "## Commits on dev since last sync with main\n\n"
             "- oldsha old: commit\n"
             f"{promote.COMMITS_END}\n\n"
             "## Notes\n\nKeep my note.\n\n"
@@ -79,6 +79,7 @@ class BuildPromotePrTest(unittest.TestCase):
         self.assertNotIn("oldsha", body)
         self.assertIn("Keep my note.", body)
         self.assertIn("Existing footer.", body)
+        self.assertIn("since last sync with main", body)
 
     def test_main_writes_github_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -95,6 +96,57 @@ class BuildPromotePrTest(unittest.TestCase):
             self.assertIn("has_commits=true\n", text)
             self.assertIn("body<<EOF\n", text)
             self.assertIn("- abc1234 feat: ship it", text)
+
+    def test_collect_uses_last_main_sync_merge(self) -> None:
+        def fake_git(*args: str):
+            cmd = list(args)
+            if cmd[:3] == ["rev-list", "--first-parent", "--merges"]:
+                return mock.Mock(
+                    returncode=0, stdout="merge1\nmerge0\n", stderr=""
+                )
+            if cmd[:1] == ["rev-parse"] and cmd[1:] == ["merge1^1", "merge1^2"]:
+                return mock.Mock(
+                    returncode=0, stdout="parent1\nmainish\n", stderr=""
+                )
+            if cmd[:3] == ["merge-base", "--is-ancestor", "mainish"]:
+                return mock.Mock(returncode=0, stdout="", stderr="")
+            if cmd[:1] == ["log"]:
+                self.assertEqual(cmd[-1], "merge1..HEAD")
+                return mock.Mock(
+                    returncode=0,
+                    stdout="- abc1234 feat: only new\n- def5678 chore(bump): 1.0.1.dev1\n",
+                    stderr="",
+                )
+            self.fail(f"unexpected git args: {cmd}")
+
+        with mock.patch.object(promote, "_git", side_effect=fake_git):
+            lines = promote.collect_promote_commit_lines("origin/main", "HEAD")
+        self.assertEqual(
+            lines,
+            [
+                "- abc1234 feat: only new",
+                "- def5678 chore(bump): 1.0.1.dev1",
+            ],
+        )
+
+    def test_collect_falls_back_to_ancestry_path(self) -> None:
+        def fake_git(*args: str):
+            cmd = list(args)
+            if cmd[:3] == ["rev-list", "--first-parent", "--merges"]:
+                return mock.Mock(returncode=0, stdout="", stderr="")
+            if cmd[:1] == ["merge-base"] and "--is-ancestor" not in cmd:
+                return mock.Mock(returncode=0, stdout="mbsha\n", stderr="")
+            if cmd[:1] == ["log"] and "--ancestry-path" in cmd:
+                return mock.Mock(
+                    returncode=0,
+                    stdout="- abc1234 fix: narrow list\n",
+                    stderr="",
+                )
+            self.fail(f"unexpected git args: {cmd}")
+
+        with mock.patch.object(promote, "_git", side_effect=fake_git):
+            lines = promote.collect_promote_commit_lines("origin/main", "HEAD")
+        self.assertEqual(lines, ["- abc1234 fix: narrow list"])
 
 
 if __name__ == "__main__":
