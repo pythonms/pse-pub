@@ -58,6 +58,22 @@ class BumpMainVersionTest(unittest.TestCase):
         )
         self.assertEqual((version, tag), ("0.1.16.dev3", "v0.1.16.dev3"))
 
+    def test_bump_advances_base_when_clean_tag_already_released(self) -> None:
+        version, tag = bump.bump(
+            "fix: after release",
+            '__version__ = "0.5.0.dev4"\n',
+            taken_tags={"v0.5.0", "v0.5.0.dev4"},
+        )
+        self.assertEqual((version, tag), ("0.5.1.dev1", "v0.5.1.dev1"))
+
+    def test_bump_feat_after_released_base(self) -> None:
+        version, tag = bump.bump(
+            "feat: next",
+            '__version__ = "0.5.0.dev2"\n',
+            taken_tags={"v0.5.0"},
+        )
+        self.assertEqual((version, tag), ("0.6.0.dev1", "v0.6.0.dev1"))
+
     def test_next_dev_checkpoint_from_tag_history(self) -> None:
         version, tag = bump.next_dev_checkpoint(
             '__version__ = "1.2.0.dev1"\n',
@@ -104,12 +120,12 @@ class BumpMainVersionTest(unittest.TestCase):
         )
         self.assertEqual((version, tag), ("0.2.5", "v0.2.5"))
 
-    def test_release_version_from_file_fails_if_tag_exists(self) -> None:
-        with self.assertRaises(SystemExit):
-            bump.release_version_from_file(
-                '__version__ = "0.2.5.dev1"\n',
-                taken_tags={"v0.2.5"},
-            )
+    def test_release_skips_taken_clean_tag(self) -> None:
+        version, tag = bump.release_version_from_file(
+            '__version__ = "0.5.0.dev4"\n',
+            taken_tags={"v0.5.0"},
+        )
+        self.assertEqual((version, tag), ("0.5.1", "v0.5.1"))
 
     def test_changelog_feat_under_unreleased(self) -> None:
         current = "# Changelog\n\n## [Unreleased]\n\n## [0.1.0] - 2026-01-01\n- old\n"

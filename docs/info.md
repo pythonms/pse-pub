@@ -3,7 +3,7 @@ Poniżej: jak odpalić to samo ręcznie / lokalnie.
 
 **Przez Actions (zalecane)**
 
-1. Repo **pse-priv** → **Actions** → workflow **Dev Build**
+1. Repo **pse-priv** → **Actions** → workflow **Dev Pipeline**
 2. **Run workflow**
 3. Branch: **`dev`**
 4. **Create and push a private vX.Y.Z.devN…** → zostaw **true**
@@ -14,7 +14,7 @@ Workflow na tipie `dev` policzy następne `.devN` (z pliku + istniejących tagó
 To samo z CLI:
 
 ```bash
-gh workflow run "Dev Build" --ref dev -f create_dev_tag=true
+gh workflow run "Dev Pipeline" --ref dev -f create_dev_tag=true
 ```
 
 **Bez Actions (ręcznie lokalnie)** — tylko jeśli musisz:

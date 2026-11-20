@@ -42,8 +42,8 @@ API: http://localhost:8000 · Swagger: http://localhost:8000/docs
 
 1. Feature branch → PR → `dev` (CI + obraz GHCR `:dev`).
 2. Każdy push na `dev` (oprócz `chore(bump):`) **podbija** `__version__.py` do PEP 440 `.devN` i stawia tag `vX.Y.Z.devN` **tylko na origin** (priv; nigdy na public).
-3. Opcjonalnie ten sam checkpoint ręcznie: Actions → Dev Build → Run workflow, albo
-   `gh workflow run "Dev Build" --ref dev -f create_dev_tag=true`.
+3. Opcjonalnie ten sam checkpoint ręcznie: Actions → Dev Pipeline → Run workflow, albo
+   `gh workflow run "Dev Pipeline" --ref dev -f create_dev_tag=true`.
 4. Push na `dev` otwiera/aktualizuje automatyczny PR `dev` → `main`.
 5. Przed merge **edytuj tytuł PR** — opis squasha do `CHANGELOG`.
 6. **Squash merge** PR na `main`.

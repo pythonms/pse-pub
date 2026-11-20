@@ -31,6 +31,12 @@
 
 
 
+
+## [0.5.1] - 2026-11-20
+
+### Bug Fixes
+- combine bump if branches for ruff SIM114 (#29)
+
 ## [0.5.0] - 2026-11-20
 
 ### Changes
