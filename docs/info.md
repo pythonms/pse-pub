@@ -1,3 +1,6 @@
+Przy **każdym pushu na `dev`** Actions sam stawia tag `vX.Y.Z.devN` na origin (priv).
+Poniżej: jak odpalić to samo ręcznie / lokalnie.
+
 **Przez Actions (zalecane)**
 
 1. Repo **pse-priv** → **Actions** → workflow **Dev Build**

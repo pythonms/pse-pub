@@ -41,12 +41,9 @@ API: http://localhost:8000 · Swagger: http://localhost:8000/docs
 ## Codzienny rytm
 
 1. Feature branch → PR → `dev` (CI + obraz GHCR `:dev`).
-2. Każdy zwykły push na `dev` (oprócz `chore(bump):`) **podbija** `__version__.py` do PEP 440 `.devN` (pod wheel), **bez** tworzenia tagu git (żeby nie zaśmiecać listy tagów).
-3. Checkpoint `vX.Y.Z.devN` na origin — **na żądanie**:
-   - Actions → Dev Build → **Run workflow** (branch `dev`, `create_dev_tag=true`), albo
-   - CLI: `gh workflow run "Dev Build" --ref dev -f create_dev_tag=true`, albo
-   - klasyczny merge commit (`Merge pull request …`) na `dev`
-   - logika: baza z `__version__.py` / ostatniego czystego tagu; N = max istniejących `vBASE.dev*` (+ plik) + 1
+2. Każdy push na `dev` (oprócz `chore(bump):`) **podbija** `__version__.py` do PEP 440 `.devN` i stawia tag `vX.Y.Z.devN` **tylko na origin** (priv; nigdy na public).
+3. Opcjonalnie ten sam checkpoint ręcznie: Actions → Dev Build → Run workflow, albo
+   `gh workflow run "Dev Build" --ref dev -f create_dev_tag=true`.
 4. Push na `dev` otwiera/aktualizuje automatyczny PR `dev` → `main`.
 5. Przed merge **edytuj tytuł PR** — opis squasha do `CHANGELOG`.
 6. **Squash merge** PR na `main`.
