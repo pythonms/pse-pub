@@ -29,6 +29,12 @@
 
 
 
+
+## [0.4.1] - 2026-11-20
+
+### Documentation
+- add changelog info (#25)
+
 ## [0.4.0] - 2026-11-20
 
 ### Documentation

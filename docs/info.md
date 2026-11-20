@@ -25,3 +25,5 @@ git push origin as v0.4.0.dev6   # NIE na remote public
 ```
 
 Lepiej użyć dispatch — ta sama logika co w CI, bez kolizji numerów.
+Nie wiem czy to będzie ok do weryfikacji.
+CHANGELOG dev = main, nie dodajemy x.y.z.dev wersji
