@@ -35,6 +35,12 @@
 
 
 
+
+## [0.5.5] - 2026-11-23
+
+### Changes
+- Merge pull request #42 from pythonms/dev
+
 ## [0.5.4] - 2026-11-23
 
 ### Documentation
