@@ -11,7 +11,7 @@ app = FastAPI(
 
 @app.get("/")
 def read_root():
-    """Główny endpoint zwracający powitanie podstawowe.!!!wersja testowa!!!"""
+    """Główny endpoint zwracający powitanie podstawowe."""
     return {
         "message": "Witaj w przykładowym projekcie FastAPI!",
         "status": "sukces",
@@ -29,4 +29,4 @@ def health():
 @app.get("/version")
 def version():
     """Return package version for smoke tests."""
-    return {"version": __version__}
+    return {"version": __version__, "service": "pse"}

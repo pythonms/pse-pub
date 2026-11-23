@@ -30,7 +30,10 @@ class MainAppTest(unittest.TestCase):
     def test_version(self) -> None:
         response = self.client.get("/version")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"version": __version__})
+        self.assertEqual(
+            response.json(),
+            {"version": __version__, "service": "pse"},
+        )
 
 
 if __name__ == "__main__":
