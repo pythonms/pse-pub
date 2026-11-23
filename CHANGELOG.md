@@ -44,6 +44,12 @@
 
 
 
+
+## [0.7.1] - 2026-11-23
+
+### Documentation
+- add GitHub community standards (license, CoC, contributing, security) (#51)
+
 ## [0.7.0] - 2026-11-23
 
 ### Features

@@ -4,6 +4,7 @@ dynamic = ["version"]
 description = "Przykładowy projekt FastAPI (dev wheel builds enabled)"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 dependencies = [
     "fastapi>=0.110.0",
     "uvicorn[standard]>=0.28.0",

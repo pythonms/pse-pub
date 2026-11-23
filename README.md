@@ -1,9 +1,17 @@
 # pse-priv
 
-Prywatne repozytorium rozwojowe. Publiczne lustro ląduje w [pse-pub](https://github.com/pythonms/pse-pub) przy każdym squash-merge na `main` (konfiguracja **A**: auto-bump + sync).
+Demo FastAPI + GitHub Actions: prywatne repo rozwojowe z auto-bumpem `.devN` i lustrem wydań do [pse-pub](https://github.com/pythonms/pse-pub) przy każdym squash-merge na `main` (konfiguracja **A**).
 
 Szczegóły modelu: [docs/workflows/config-A-mirror-auto.md](docs/workflows/config-A-mirror-auto.md).  
 Porównanie A vs B (Mermaid): [docs/plans/porownanie-1A2A-vs-1B2B.plan.md](docs/plans/porownanie-1A2A-vs-1B2B.plan.md).
+
+## Community
+
+- [Contributing](CONTRIBUTING.md)
+- [Code of conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
+- [License (MIT)](LICENSE)
+- [Changelog](CHANGELOG.md)
 
 ## Remotes (stacja robocza)
 
