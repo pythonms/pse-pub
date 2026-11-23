@@ -11,7 +11,7 @@ app = FastAPI(
 
 @app.get("/")
 def read_root():
-    """Główny endpoint zwracający powitanie podstawowe."""
+    """Główny endpoint zwracający powitanie podstawowe.!!!wersja testowa!!!"""
     return {
         "message": "Witaj w przykładowym projekcie FastAPI!",
         "status": "sukces",

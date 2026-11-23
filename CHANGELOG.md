@@ -38,6 +38,12 @@
 
 
 
+
+## [0.5.8] - 2026-11-23
+
+### CI
+- skip bump on chore(sync) auto-merge from main (#45)
+
 ## [0.5.7] - 2026-11-23
 
 ### CI
