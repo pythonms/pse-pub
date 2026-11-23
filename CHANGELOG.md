@@ -41,6 +41,12 @@
 
 
 
+
+## [0.6.1] - 2026-11-23
+
+### Bug Fixes
+- create public release tags via API instead of git push (#48)
+
 ## [0.6.0] - 2026-11-23
 
 ### Features
