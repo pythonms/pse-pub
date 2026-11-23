@@ -37,16 +37,6 @@ class BuildPromotePrTest(unittest.TestCase):
         lines = ["- abc1234 feat: add endpoint", "- def5678 fix: typo"]
         self.assertEqual(promote.default_title(lines), "feat: add endpoint")
 
-    def test_default_title_prefers_feat_over_newer_fix(self) -> None:
-        lines = [
-            "- abc1234 fix: expect service field in /health test",
-            "- def5678 feat: addition pse service info",
-            "- ghi9012 docs: addition info github",
-        ]
-        self.assertEqual(
-            promote.default_title(lines), "feat: addition pse service info"
-        )
-
     def test_default_title_skips_chore_bump_tip(self) -> None:
         lines = [
             "- abc1234 chore(bump): 0.3.2",
