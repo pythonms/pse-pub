@@ -45,6 +45,12 @@
 
 
 
+
+## [0.7.2] - 2026-11-23
+
+### CI
+- sync issue/PR templates to pse-pub for community checklist (#52)
+
 ## [0.7.1] - 2026-11-23
 
 ### Documentation
