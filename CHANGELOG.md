@@ -35,6 +35,12 @@
 
 
 
+
+## [0.5.5] - 2026-11-23
+
+### Bug Fixes
+- bump from strongest commit since last chore(bump)(#34)
+
 ## [0.5.4] - 2026-11-23
 
 ### Features

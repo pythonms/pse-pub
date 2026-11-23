@@ -43,6 +43,47 @@ class BumpMainVersionTest(unittest.TestCase):
         version, tag = bump.bump("feat: bigger", '__version__ = "1.2.4.dev3"\n')
         self.assertEqual((version, tag), ("1.3.0.dev1", "v1.3.0.dev1"))
 
+    def test_strongest_bump_message_prefers_feat_over_fix(self) -> None:
+        msg = bump.strongest_bump_message(
+            "fix: expect service field",
+            "feat: addition pse service info",
+            "docs: note",
+        )
+        self.assertEqual(bump.bump_kind(msg), "minor")
+        self.assertIn("feat:", msg)
+
+    def test_dev_mode_uses_strongest_commit_since_last_bump(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "__version__.py").write_text(
+                '__version__ = "0.5.3.dev2"\n', encoding="utf-8"
+            )
+            out = root / "out.txt"
+            env = {
+                "MODE": "dev",
+                "COMMIT_MESSAGE": "fix: expect service field in /health test",
+                "GITHUB_OUTPUT": str(out),
+            }
+            with (
+                mock.patch.object(bump, "VERSION_FILE", root / "__version__.py"),
+                mock.patch.object(
+                    bump,
+                    "commit_subjects_since_last_bump",
+                    return_value=[
+                        "fix: expect service field in /health test",
+                        "feat: addition pse service info",
+                        "docs: addition info github",
+                    ],
+                ),
+                mock.patch.object(bump, "existing_tags", return_value=set()),
+                mock.patch.dict(os.environ, env, clear=False),
+            ):
+                bump.main()
+            self.assertEqual(
+                (root / "__version__.py").read_text(encoding="utf-8"),
+                '__version__ = "0.6.0.dev1"\n',
+            )
+
     def test_breaking_on_dev_bumps_major_base(self) -> None:
         version, tag = bump.bump(
             "fix: adjust\n\nBREAKING CHANGE: new protocol\n",
