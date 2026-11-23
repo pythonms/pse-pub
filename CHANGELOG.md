@@ -39,6 +39,12 @@
 
 
 
+
+## [0.5.9] - 2026-11-23
+
+### Bug Fixes
+- align /health and / tests with service field (#46)
+
 ## [0.5.8] - 2026-11-23
 
 ### CI

@@ -17,13 +17,14 @@ class MainAppTest(unittest.TestCase):
         body = response.json()
         self.assertEqual(body["status"], "sukces")
         self.assertEqual(body["code"], 200)
+        self.assertEqual(body["service"], "pse")
 
     def test_health(self) -> None:
         response = self.client.get("/health")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            {"status": "ok", "version": __version__},
+            {"status": "ok", "version": __version__, "service": "pse"},
         )
 
     def test_version(self) -> None:

@@ -23,7 +23,7 @@ def read_root():
 @app.get("/health")
 def health():
     """Liveness probe for Compose, CI, and local smoke checks."""
-    return {"status": "ok", "version": __version__}
+    return {"status": "ok", "version": __version__, "service": "pse"}
 
 
 @app.get("/version")
