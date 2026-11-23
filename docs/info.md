@@ -30,3 +30,5 @@ git push origin dev v0.4.0.dev6   # NIE na remote public
 Lepiej użyć dispatch — ta sama logika co w CI, bez kolizji numerów.
 
 **CHANGELOG:** na `dev` nie dopisujemy wpisów `.devN`; lądują przy release na `main` (tytuł squash PR).
+
+**`__version__.py`:** po Main Release job `sync-dev` sam merguje `main`→`dev` i zostawia linię `.devN` (bez ręcznego konfliktu). Lokalnie raz: `git config merge.ours.driver true`.

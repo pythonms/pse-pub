@@ -1,0 +1,3 @@
+# When merging main → as, keep the as-side development version (.devN).
+# Requires: git config merge.ours.driver true  (CI sync job sets this).
+__version__.py merge=ours

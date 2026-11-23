@@ -37,6 +37,12 @@
 
 
 
+
+## [0.5.7] - 2026-11-23
+
+### CI
+- skip unit check on Main Release to save Actions minutes (#44)
+
 ## [0.5.6] - 2026-11-23
 
 ### Documentation
