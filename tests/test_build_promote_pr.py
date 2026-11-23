@@ -101,22 +101,37 @@ class BuildPromotePrTest(unittest.TestCase):
         def fake_git(*args: str):
             cmd = list(args)
             if cmd[:3] == ["rev-list", "--first-parent", "--merges"]:
-                return mock.Mock(
-                    returncode=0, stdout="merge1\nmerge0\n", stderr=""
-                )
+                head = cmd[3]
+                if head == "HEAD":
+                    return mock.Mock(
+                        returncode=0, stdout="merge1\nmerge0\n", stderr=""
+                    )
+                # pre-sync walk: no older sync → empty
+                return mock.Mock(returncode=0, stdout="", stderr="")
             if cmd[:1] == ["rev-parse"] and cmd[1:] == ["merge1^1", "merge1^2"]:
                 return mock.Mock(
                     returncode=0, stdout="parent1\nmainish\n", stderr=""
                 )
-            if cmd[:3] == ["merge-base", "--is-ancestor", "mainish"]:
+            if cmd[:2] == ["merge-base", "--is-ancestor"]:
                 return mock.Mock(returncode=0, stdout="", stderr="")
+            if cmd[:1] == ["merge-base"]:
+                return mock.Mock(returncode=0, stdout="mb\n", stderr="")
+            if cmd[:2] == ["diff", "--name-only"]:
+                # Post-sync work explains the whole tree diff → no pre-sync list
+                return mock.Mock(returncode=0, stdout="src/x.py\n", stderr="")
             if cmd[:1] == ["log"]:
-                self.assertEqual(cmd[-1], "merge1..HEAD")
-                return mock.Mock(
-                    returncode=0,
-                    stdout="- abc1234 feat: only new\n- def5678 chore(bump): 1.0.1.dev1\n",
-                    stderr="",
-                )
+                range_spec = cmd[-1]
+                if range_spec == "merge1..HEAD":
+                    return mock.Mock(
+                        returncode=0,
+                        stdout=(
+                            "- abc1234 feat: only new\n"
+                            "- def5678 chore(bump): 1.0.1.dev1\n"
+                        ),
+                        stderr="",
+                    )
+                # ancestry-path / before-sync fallback
+                return mock.Mock(returncode=0, stdout="", stderr="")
             self.fail(f"unexpected git args: {cmd}")
 
         with mock.patch.object(promote, "_git", side_effect=fake_git):
@@ -147,6 +162,83 @@ class BuildPromotePrTest(unittest.TestCase):
         with mock.patch.object(promote, "_git", side_effect=fake_git):
             lines = promote.collect_promote_commit_lines("origin/main", "HEAD")
         self.assertEqual(lines, ["- abc1234 fix: narrow list"])
+
+    def test_collect_includes_pre_sync_when_only_bumps_after(self) -> None:
+        """After main→dev merge, sync..HEAD is often only chore(bump)."""
+
+        def fake_git(*args: str):
+            cmd = list(args)
+            if cmd[:3] == ["rev-list", "--first-parent", "--merges"]:
+                head = cmd[3]
+                if head == "HEAD":
+                    return mock.Mock(returncode=0, stdout="sync1\n", stderr="")
+                if head == "sync1^1":
+                    return mock.Mock(returncode=0, stdout="sync0\n", stderr="")
+                return mock.Mock(returncode=0, stdout="", stderr="")
+            if cmd[:1] == ["rev-parse"]:
+                sha = cmd[1].split("^")[0]
+                if sha == "sync1":
+                    return mock.Mock(
+                        returncode=0, stdout="devparent\nmainish\n", stderr=""
+                    )
+                if sha == "sync0":
+                    return mock.Mock(
+                        returncode=0, stdout="older\nmainish0\n", stderr=""
+                    )
+            if cmd[:2] == ["merge-base", "--is-ancestor"]:
+                return mock.Mock(returncode=0, stdout="", stderr="")
+            if cmd[:1] == ["log"]:
+                range_spec = cmd[-1]
+                if range_spec == "sync1..HEAD":
+                    return mock.Mock(
+                        returncode=0,
+                        stdout="- aaa1111 chore(bump): 0.5.2.dev2\n",
+                        stderr="",
+                    )
+                if range_spec == "sync0..sync1^1":
+                    return mock.Mock(
+                        returncode=0,
+                        stdout="- bbb2222 docs: tidy info.md\n",
+                        stderr="",
+                    )
+            if cmd[:2] == ["diff", "--name-only"]:
+                range_spec = cmd[-1]
+                if range_spec == "origin/main...HEAD":
+                    return mock.Mock(
+                        returncode=0, stdout="docs/info.md\n__version__.py\n", stderr=""
+                    )
+                if range_spec == "sync1...HEAD":
+                    return mock.Mock(
+                        returncode=0, stdout="__version__.py\n", stderr=""
+                    )
+                return mock.Mock(returncode=0, stdout="", stderr="")
+            self.fail(f"unexpected git args: {cmd}")
+
+        with mock.patch.object(promote, "_git", side_effect=fake_git):
+            lines = promote.collect_promote_commit_lines("origin/main", "HEAD")
+        self.assertEqual(
+            lines,
+            [
+                "- bbb2222 docs: tidy info.md",
+                "- aaa1111 chore(bump): 0.5.2.dev2",
+            ],
+        )
+
+    def test_main_needs_promote_when_tree_differs(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "out.txt"
+            env = {
+                "COMMIT_LINES": "\n",
+                "EXISTING_BODY": "",
+                "GITHUB_OUTPUT": str(out),
+                "MAIN_REF": "origin/main",
+            }
+            with (
+                mock.patch.dict(os.environ, env, clear=False),
+                mock.patch.object(promote, "tree_differs", return_value=True),
+            ):
+                self.assertEqual(promote.main(), 0)
+            self.assertIn("has_commits=true\n", out.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

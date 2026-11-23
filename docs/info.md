@@ -20,13 +20,13 @@ gh workflow run "Dev Pipeline" --ref dev -f create_dev_tag=true
 **Bez Actions (ręcznie lokalnie)** — tylko jeśli musisz:
 
 ```bash
-git checkout as && git pull
+git checkout dev && git pull
 # ustaw/sprawdź __version__.py → np. 0.4.0.dev6
 git add __version__.py && git commit -m "chore(bump): 0.4.0.dev6"
 git tag -a v0.4.0.dev6 -m "Dev checkpoint v0.4.0.dev6"
-git push origin as v0.4.0.dev6   # NIE na remote public
+git push origin dev v0.4.0.dev6   # NIE na remote public
 ```
 
 Lepiej użyć dispatch — ta sama logika co w CI, bez kolizji numerów.
-Nie wiem czy to będzie ok do weryfikacji.
-CHANGELOG dev = main, nie dodajemy x.y.z.dev wersji
+
+**CHANGELOG:** na `dev` nie dopisujemy wpisów `.devN`; lądują przy release na `main` (tytuł squash PR).

@@ -32,6 +32,12 @@
 
 
 
+
+## [0.5.2] - 2026-11-23
+
+### Documentation
+- tidy info.md tagging howto and changelog note (#31)
+
 ## [0.5.1] - 2026-11-20
 
 ### Bug Fixes
