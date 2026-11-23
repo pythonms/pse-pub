@@ -43,6 +43,12 @@
 
 
 
+
+## [0.7.0] - 2026-11-23
+
+### Features
+- service pse api change (#50)
+
 ## [0.6.2] - 2026-11-23
 
 ### Bug Fixes
