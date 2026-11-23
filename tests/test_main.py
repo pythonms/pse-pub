@@ -23,7 +23,7 @@ class MainAppTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            {"status": "ok", "version": __version__},
+            {"status": "ok", "version": __version__, "service": "pse"},
         )
 
     def test_version(self) -> None:

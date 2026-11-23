@@ -4,7 +4,7 @@ from __version__ import __version__
 
 app = FastAPI(
     title="Przykładowy Projekt FastAPI, do testów, przpływu workflow w github.",
-    description="Prosta testowa aplikacja z konfiguracją pyproject.toml",
+    description="Prosta testowa aplikacja z konfiguracją pyproject.toml, w github actions.",
     version=__version__,
 )
 
@@ -23,7 +23,7 @@ def read_root():
 @app.get("/health")
 def health():
     """Liveness probe for Compose, CI, and local smoke checks."""
-    return {"status": "ok", "version": __version__}
+    return {"status": "ok", "version": __version__, "service": "pse"}
 
 
 @app.get("/version")
