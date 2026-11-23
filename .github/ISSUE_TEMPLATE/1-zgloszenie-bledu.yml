@@ -1,0 +1,50 @@
+name: Zgłoszenie błędu / problemu
+description: Utwórz zgłoszenie, jeśli coś nie działa prawidłowo
+title: "[BUG]: "
+labels: ["bug", "triage"]
+type: bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Dziękujemy za zgłoszenie! Wypełnij poniższe pola, aby pomóc zespołowi w szybszej weryfikacji problemu.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Opis problemu
+      description: Opisz dokładnie, co idzie nie tak.
+      placeholder: Opisz krótko zaobserwowany problem...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Kroki do odtworzenia
+      description: Jak krok po kroku wywołać ten błąd?
+      placeholder: |
+        1. Wejdź na stronę...
+        2. Kliknij przycisk...
+        3. Zobacz błąd...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Oczekiwane vs rzeczywiste zachowanie
+      placeholder: |
+        Oczekiwane: System powinien...
+        Rzeczywiste: System zwraca błąd...
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Środowisko / Kontekst
+      description: Przeglądarka, wersja aplikacji, system operacyjny itp.
+      placeholder: np. Chrome 120, Windows 11 / Środowisko testowe STG
+    validations:
+      required: false

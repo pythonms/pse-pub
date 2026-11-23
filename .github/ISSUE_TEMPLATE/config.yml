@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/pythonms/pse-priv/security/advisories/new
+    about: Please report security issues privately (see SECURITY.md).
+  - name: Public mirror (pse-pub)
+    url: https://github.com/pythonms/pse-pub
+    about: Released / public copy of this project.

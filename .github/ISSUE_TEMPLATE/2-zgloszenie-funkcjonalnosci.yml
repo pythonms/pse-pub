@@ -1,0 +1,56 @@
+name: Zgłoszenie nowej funkcjonalności
+description: Zaproponuj nową funkcję lub usprawnienie produktu
+title: "[FEATURE]: "
+labels: ["enhancement", "triage"]
+type: feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Dziękujemy za pomysł! Wypełnij poniższe pola, aby zespół mógł szybciej ocenić propozycję.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Opis pomysłu
+      description: Jasny i zwięzły opis proponowanej zmiany lub usprawnienia.
+      placeholder: Krótko opisz, co chciałbyś dodać lub zmienić...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-context
+    attributes:
+      label: Problem, który to rozwiązuje
+      description: Czy ta zmiana rozwiązuje konkretny problem lub niedogodność? Opisz kontekst.
+      placeholder: Obecnie użytkownik musi... / Brakuje możliwości...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proponowane rozwiązanie
+      description: Opisz, jak wyobrażasz sobie działanie tej funkcjonalności.
+      placeholder: |
+        Po wdrożeniu użytkownik mógłby...
+        Interfejs mógłby zawierać...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-materials
+    attributes:
+      label: Dodatkowe materiały
+      description: Zrzuty ekranu (wklej linki), makiety lub dokumentacja pomocna przy ocenie pomysłu.
+      placeholder: Linki do Figma, dokumentacji, przykłady z innych produktów...
+    validations:
+      required: false
+
+  - type: upload
+    id: attachments
+    attributes:
+      label: Załączniki
+      description: Opcjonalne zrzuty ekranu lub makiety.
+    validations:
+      required: false
