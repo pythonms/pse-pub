@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from __version__ import __version__
 
 app = FastAPI(
-    title="Przykładowy Projekt FastAPI, do testów workflow.",
+    title="Przykładowy Projekt FastAPI, do testów workflow na GitHub.",
     description="Prosta testowa aplikacja z konfiguracją pyproject.toml",
     version=__version__,
 )
@@ -13,7 +13,7 @@ app = FastAPI(
 def read_root():
     """Główny endpoint zwracający powitanie podstawowe."""
     return {
-        "message": "Witaj w przykładowym projekcie FastAPI!!!!",
+        "message": "Witaj w przykładowym projekcie FastAPI!",
         "status": "sukces",
         "code": 200,
         "service": "pse",
